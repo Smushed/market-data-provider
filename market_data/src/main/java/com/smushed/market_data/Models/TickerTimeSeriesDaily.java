@@ -13,4 +13,5 @@ public class TickerTimeSeriesDaily {
     public float close;
     public float high;
     public float low;
+    public int volume;
 }
