@@ -6,6 +6,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+import com.smushed.market_data.Exceptions.TickerPullException;
 import com.smushed.market_data.Exceptions.TickerSaveException;
 
 @RestControllerAdvice 
@@ -19,10 +21,17 @@ public class GlobalExceptionHandler {
                 .body("Ticker could not be saved");
     }
 
+    @ExceptionHandler(TickerPullException.class)
+    public ResponseEntity<String> handleTickerPull(TickerPullException ex) {
+        log.error("Ticker Save Failed. Message: " + ex.getMessage(), ex);
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body("Ticker data could not be retrieved");
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<String> genericErrorHandler(Exception ex) {
         log.error("Unexpected Error. Message : " + ex.getMessage(), ex);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body("Ticker could not be saved");
+                .body("Something went wrong");
     }
 }
